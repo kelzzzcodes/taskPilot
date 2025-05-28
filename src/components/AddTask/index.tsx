@@ -1,0 +1,102 @@
+import React, { useState, useEffect } from 'react'
+import { Button } from '../../ui'
+
+interface Task {
+  id: string
+  title: string
+  description: string
+  dueDate: string
+  isComplete: boolean
+}
+
+export const AddTask = () => {
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [dueDate, setDueDate] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Fetch tasks from localStorage
+  const fetchTasks = () => {
+    const savedTasks = JSON.parse(localStorage.getItem('tasks') || '[]')
+    setTasks(savedTasks)
+  }
+
+  // Submit new task
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (title.trim() === '') {
+      alert('Title is required.')
+      return
+    }
+
+    const taskId = `task-${Date.now()}`
+    const newTask: Task = {
+      id: taskId,
+      title,
+      description,
+      dueDate,
+      isComplete: false,
+    }
+
+    const existingTasks = JSON.parse(localStorage.getItem('tasks') || '[]')
+    existingTasks.push(newTask)
+    localStorage.setItem('tasks', JSON.stringify(existingTasks))
+
+    alert('Task added successfully!')
+    fetchTasks()
+    setIsModalOpen(false)
+    setTitle('')
+    setDescription('')
+    setDueDate('')
+  }
+
+  useEffect(() => {
+    fetchTasks()
+  }, [])
+
+  return (
+    <div className="text-black flex flex-col gap-4">
+      <h2 className="text-xl font-bold ">Add Task</h2>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
+          <label className="text-lg">Title</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter Title"
+            className="outline-none border-2 border-[#002263] rounded-md p-2"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-lg">Description</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter Description"
+            className="outline-none border-2 border-[#002263] rounded-md p-2 h-32"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-lg">Due Date</label>
+          <input
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            className="outline-none border-2 border-[#002263] rounded-md p-2"
+          />
+        </div>
+        <div className="flex justify-end mt-2">
+          <Button
+            type="submit"
+            className="bg-[#002263] text-white px-4 py-2 rounded-md"
+          >
+            Submit
+          </Button>
+        </div>
+      </form>
+    </div>
+  )
+}
