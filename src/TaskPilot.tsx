@@ -9,7 +9,7 @@ export const TaskPilot = () => {
   return (
     <>
       <Navbar />
-      <main>{routing}</main>
+      <main className="relative mt-[100px]">{routing}</main>
     </>
   )
 }

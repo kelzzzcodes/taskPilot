@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Modal } from '../../ui'
-import { AddTask, Task } from '../../components'
+import { AddTask, EditTask, Task } from '../../components'
 
 interface TaskType {
   id: string
@@ -13,6 +13,8 @@ interface TaskType {
 export const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [tasks, setTasks] = useState<TaskType[]>([])
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [selectedTask, setSelectedTask] = useState<TaskType | null>(null)
 
   useEffect(() => {
     const storedTasks = localStorage.getItem('tasks')
@@ -39,8 +41,8 @@ export const Home = () => {
   }
 
   const openEditModal = (task: TaskType) => {
-    // Handle open modal for edit (You can implement EditTask logic here)
-    console.log('Edit', task)
+    setSelectedTask(task)
+    setEditModalOpen(true)
   }
 
   return (
@@ -64,6 +66,22 @@ export const Home = () => {
         deleteTask={deleteTask}
         openEditModal={openEditModal}
       />
+
+      <Modal isOpen={editModalOpen} onClose={() => setEditModalOpen(false)}>
+        {selectedTask && (
+          <EditTask
+            task={selectedTask}
+            onClose={() => setEditModalOpen(false)}
+            onUpdate={(updatedTask) => {
+              const updatedTasks = tasks.map((task) =>
+                task.id === updatedTask.id ? updatedTask : task,
+              )
+              updateLocalStorage(updatedTasks)
+              setEditModalOpen(false)
+            }}
+          />
+        )}
+      </Modal>
     </section>
   )
 }
