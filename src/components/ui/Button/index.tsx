@@ -10,15 +10,15 @@ interface ButtonProps {
 export const Button: React.FC<ButtonProps> = ({
   onClick,
   children,
-  className = '',
+  className,
   type = 'button',
 }) => {
+  const buttonClass = className
+    ? className
+    : 'bg-[#e8e5c3] p-4 rounded-md text-black font-bold'
+
   return (
-    <button
-      onClick={onClick}
-      type={type}
-      className="bg-[#e8e5c3] p-4 rounded-md text-black font-bold"
-    >
+    <button onClick={onClick} type={type} className={buttonClass}>
       {children}
     </button>
   )
