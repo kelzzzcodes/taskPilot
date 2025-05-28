@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Button } from '../../components/ui'
-import { Modal } from '../../components/ui/Modal' // adjust path if needed
+import { Button, Modal } from '../../ui'
+import { AddTask } from '../../components'
 
 export const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -12,8 +12,7 @@ export const Home = () => {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="text-xl font-bold mb-4 text-black">Add a New Task</h2>
-        <p>Put your task form or content here.</p>
+        <AddTask />
       </Modal>
     </section>
   )
