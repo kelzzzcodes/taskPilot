@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Button } from '../../ui'
 
 interface Task {
@@ -9,20 +9,16 @@ interface Task {
   isComplete: boolean
 }
 
-export const AddTask = () => {
-  const [tasks, setTasks] = useState<Task[]>([])
+interface AddTaskProps {
+  onClose: () => void
+  refreshTasks: () => void
+}
+
+export const AddTask: React.FC<AddTaskProps> = ({ onClose, refreshTasks }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [dueDate, setDueDate] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Fetch tasks from localStorage
-  const fetchTasks = () => {
-    const savedTasks = JSON.parse(localStorage.getItem('tasks') || '[]')
-    setTasks(savedTasks)
-  }
-
-  // Submit new task
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -31,9 +27,8 @@ export const AddTask = () => {
       return
     }
 
-    const taskId = `task-${Date.now()}`
     const newTask: Task = {
-      id: taskId,
+      id: `task-${Date.now()}`,
       title,
       description,
       dueDate,
@@ -45,20 +40,18 @@ export const AddTask = () => {
     localStorage.setItem('tasks', JSON.stringify(existingTasks))
 
     alert('Task added successfully!')
-    fetchTasks()
-    setIsModalOpen(false)
+    refreshTasks()
+    onClose()
+
+    // Reset form
     setTitle('')
     setDescription('')
     setDueDate('')
   }
 
-  useEffect(() => {
-    fetchTasks()
-  }, [])
-
   return (
     <div className="text-black flex flex-col gap-4">
-      <h2 className="text-xl font-bold ">Add Task</h2>
+      <h2 className="text-xl font-bold">Add Task</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <div className="flex flex-col gap-2">
           <label className="text-lg">Title</label>
