@@ -34,7 +34,11 @@ export const Task: React.FC<TaskProps> = ({
             checked={task.isComplete}
             onChange={() => toggleComplete(task.id)}
           />
-          <div className="flex flex-col overflow-hidden">
+          <div
+            className={`flex flex-col overflow-hidden ${
+              task.isComplete ? 'text-gray-400 line-through' : ''
+            }`}
+          >
             <ul>
               <li className="font-bold">{task.title}</li>
               <li className="break-words">{task.description}</li>
@@ -43,17 +47,21 @@ export const Task: React.FC<TaskProps> = ({
           </div>
           <div className="flex gap-2 items-center">
             {!task.isComplete && (
-              <i
-                className="pi pi-pencil cursor-pointer hover:text-blue-500"
-                onClick={() => openEditModal(task)}
-              >
-                Edit
-              </i>
+              <div className="flex gap-4 items-center text-xl">
+                <span
+                  className="cursor-pointer hover:text-blue-500"
+                  onClick={() => openEditModal(task)}
+                >
+                  Edit
+                </span>
+                <span
+                  className=" cursor-pointer hover:text-red-500"
+                  onClick={() => deleteTask(task.id)}
+                >
+                  Delete
+                </span>
+              </div>
             )}
-            <i
-              className="pi pi-trash cursor-pointer hover:text-red-500 text-xl"
-              onClick={() => deleteTask(task.id)}
-            ></i>
           </div>
         </section>
       ))}
