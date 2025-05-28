@@ -1,9 +1,15 @@
 import React from 'react'
+import { useRoutes } from 'react-router-dom'
+import { Navbar } from './components'
+import { routes } from './router/routes'
 
 export const TaskPilot = () => {
+  const routing = useRoutes(routes)
+
   return (
-    <h1 className="text-3xl font-bold underline text-green-700">
-      Hello world!
-    </h1>
+    <>
+      <Navbar />
+      <main>{routing}</main>
+    </>
   )
 }
